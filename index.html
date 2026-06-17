@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vidhan — Password & Username Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="5" stroke="#a78bfa" stroke-width="1.5"/>
+          <ellipse cx="12" cy="12" rx="11" ry="4.5" stroke="#a78bfa" stroke-width="1.5" transform="rotate(-20 12 12)"/>
+        </svg>
+      </div>
+      <span class="brand-name">Vidhan</span>
+      <span class="brand-sub"></span>
+    </div>
+    <nav class="topbar-tabs">
+      <button class="tab-btn active" data-tab="password">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Password
+      </button>
+      <button class="tab-btn" data-tab="username">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Username
+      </button>
+      <button class="tab-btn" data-tab="checker">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3z"/></svg>
+        Checker
+      </button>
+    </nav>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="layout">
+
+    <!-- LEFT: RULES PANEL -->
+    <aside class="panel panel-rules" id="rulesPanel">
+      <div class="panel-header">
+        <span class="panel-label">CUSTOM RULES</span>
+      </div>
+
+      <!-- PASSWORD RULES -->
+      <div class="rules-section" id="passwordRules">
+
+        <div class="rule-group">
+          <label class="rule-label">Length <span class="rule-val" id="lengthVal">16</span></label>
+          <div class="slider-wrap">
+            <input type="range" id="lengthSlider" min="4" max="64" value="16" class="slider" />
+            <div class="slider-ticks"><span>4</span><span>64</span></div>
+          </div>
+        </div>
+
+        <div class="rule-group">
+          <label class="rule-label">Character Types</label>
+          <div class="toggle-list">
+            <label class="toggle-item">
+              <input type="checkbox" id="useUpper" checked />
+              <span class="toggle-ui"></span>
+              <span>Uppercase (A–Z)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="useLower" checked />
+              <span class="toggle-ui"></span>
+              <span>Lowercase (a–z)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="useNumbers" checked />
+              <span class="toggle-ui"></span>
+              <span>Numbers (0–9)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="useSymbols" checked />
+              <span class="toggle-ui"></span>
+              <span>Symbols (!@#…)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="useLeet" />
+              <span class="toggle-ui"></span>
+              <span>Leet Speak (3=e, 0=o)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="rule-group">
+          <label class="rule-label">Exclude Ambiguous</label>
+          <label class="toggle-item">
+            <input type="checkbox" id="noAmbig" />
+            <span class="toggle-ui"></span>
+            <span>Remove l, 1, I, O, 0</span>
+          </label>
+        </div>
+
+        <div class="rule-group">
+          <label class="rule-label">Custom Symbol Set</label>
+          <input type="text" id="customSymbols" class="text-input" value="!@#$%^&*()-_=+[]{}|;:,.<>?" placeholder="Type symbols to include" />
+        </div>
+
+      </div>
+
+      <!-- USERNAME RULES -->
+      <div class="rules-section hidden" id="usernameRules">
+
+        <div class="rule-group">
+          <label class="rule-label">Word Count <span class="rule-val" id="wordCountVal">2</span></label>
+          <div class="slider-wrap">
+            <input type="range" id="wordCountSlider" min="1" max="5" value="2" class="slider" />
+            <div class="slider-ticks"><span>1</span><span>5</span></div>
+          </div>
+        </div>
+
+        <div class="rule-group">
+          <label class="rule-label">Separator</label>
+          <div class="chip-group" id="separatorGroup">
+            <button class="chip active" data-sep="">None</button>
+            <button class="chip" data-sep="_">Underscore _</button>
+            <button class="chip" data-sep="-">Hyphen -</button>
+            <button class="chip" data-sep=".">Dot .</button>
+            <button class="chip" data-sep=" ">Space</button>
+          </div>
+        </div>
+
+        <div class="rule-group">
+          <label class="rule-label">Style</label>
+          <div class="toggle-list">
+            <label class="toggle-item">
+              <input type="checkbox" id="uCapitalize" checked />
+              <span class="toggle-ui"></span>
+              <span>Capitalize Words</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="uNumbers" />
+              <span class="toggle-ui"></span>
+              <span>Add Numbers</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="uSymbols" />
+              <span class="toggle-ui"></span>
+              <span>Add Symbols</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="uLeet" />
+              <span class="toggle-ui"></span>
+              <span>Leet Speak</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="uNoStartNum" checked />
+              <span class="toggle-ui"></span>
+              <span>Don't Start with Number</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="uEasyWords" checked />
+              <span class="toggle-ui"></span>
+              <span>Use Easy/Common Words</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="rule-group">
+          <label class="rule-label">Theme</label>
+          <div class="chip-group" id="themeGroup">
+            <button class="chip active" data-theme="random">Random</button>
+            <button class="chip" data-theme="space">Space</button>
+            <button class="chip" data-theme="nature">Nature</button>
+            <button class="chip" data-theme="tech">Tech</button>
+            <button class="chip" data-theme="fantasy">Fantasy</button>
+            <button class="chip" data-theme="cool">Cool</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CHECKER RULES: empty left panel with tips -->
+      <div class="rules-section hidden" id="checkerRules">
+        <div class="checker-tip">
+          <div class="tip-icon">💡</div>
+          <p>Type any password in the checker to see live criteria feedback.</p>
+        </div>
+        <div class="checker-criteria-list">
+          <div class="crit-item" data-crit="length"><span class="crit-icon">○</span> Min 8 characters</div>
+          <div class="crit-item" data-crit="upper"><span class="crit-icon">○</span> Uppercase letter</div>
+          <div class="crit-item" data-crit="lower"><span class="crit-icon">○</span> Lowercase letter</div>
+          <div class="crit-item" data-crit="number"><span class="crit-icon">○</span> Number</div>
+          <div class="crit-item" data-crit="symbol"><span class="crit-icon">○</span> Special symbol</div>
+          <div class="crit-item" data-crit="long"><span class="crit-icon">○</span> 16+ characters (strong)</div>
+          <div class="crit-item" data-crit="noRepeat"><span class="crit-icon">○</span> No repeated chars</div>
+          <div class="crit-item" data-crit="noSeq"><span class="crit-icon">○</span> No sequences (abc, 123)</div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- CENTER: MAIN PANE -->
+    <main class="panel panel-main">
+
+      <!-- PASSWORD MAIN -->
+      <div class="main-section" id="passwordMain">
+        <div class="main-output-wrap">
+          <div class="output-label">Generated Password</div>
+          <div class="output-display" id="passwordDisplay">
+            <span id="passwordText" class="mono">Click Generate</span>
+          </div>
+          <div class="strength-bar-wrap">
+            <div class="strength-bar" id="strengthBar">
+              <div class="strength-fill" id="strengthFill"></div>
+            </div>
+            <span class="strength-label" id="strengthLabel">—</span>
+          </div>
+        </div>
+        <div class="main-actions">
+          <button class="btn btn-primary" id="generatePasswordBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Regenerate
+          </button>
+          <button class="btn btn-ghost" id="copyPasswordBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="btn btn-ghost" id="savePasswordBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save
+          </button>
+        </div>
+        <!-- Suggestions row -->
+        <div class="suggestions-header">More suggestions</div>
+        <div class="suggestions-grid" id="passwordSuggestions"></div>
+      </div>
+
+      <!-- USERNAME MAIN -->
+      <div class="main-section hidden" id="usernameMain">
+        <div class="main-output-wrap">
+          <div class="output-label">Generated Username</div>
+          <div class="output-display" id="usernameDisplay">
+            <span id="usernameText" class="mono">Click Generate</span>
+          </div>
+        </div>
+        <div class="main-actions">
+          <button class="btn btn-primary" id="generateUsernameBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Regenerate
+          </button>
+          <button class="btn btn-ghost" id="copyUsernameBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button class="btn btn-ghost" id="saveUsernameBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save
+          </button>
+        </div>
+        <div class="suggestions-header">More suggestions</div>
+        <div class="suggestions-grid" id="usernameSuggestions"></div>
+      </div>
+
+      <!-- CHECKER MAIN -->
+      <div class="main-section hidden" id="checkerMain">
+        <div class="main-output-wrap">
+          <div class="output-label">Password Strength Checker</div>
+          <div class="checker-input-wrap">
+            <input type="text" id="checkerInput" class="checker-input" placeholder="Type your password here…" autocomplete="off" />
+            <button class="eye-btn" id="eyeBtn" title="Toggle visibility">
+              <svg id="eyeOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eyeClosed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <div class="strength-bar-wrap" style="margin-top:16px">
+            <div class="strength-bar">
+              <div class="strength-fill" id="checkerStrengthFill"></div>
+            </div>
+            <span class="strength-label" id="checkerStrengthLabel">—</span>
+          </div>
+          <div class="checker-score-display" id="checkerScore"></div>
+          <div class="checker-crack-time" id="checkerCrackTime"></div>
+        </div>
+        <div class="criteria-grid" id="criteriaGrid">
+          <div class="crit-card" data-crit="length"><span class="crit-card-icon">✗</span><span>8+ chars</span></div>
+          <div class="crit-card" data-crit="upper"><span class="crit-card-icon">✗</span><span>Uppercase</span></div>
+          <div class="crit-card" data-crit="lower"><span class="crit-card-icon">✗</span><span>Lowercase</span></div>
+          <div class="crit-card" data-crit="number"><span class="crit-card-icon">✗</span><span>Number</span></div>
+          <div class="crit-card" data-crit="symbol"><span class="crit-card-icon">✗</span><span>Symbol</span></div>
+          <div class="crit-card" data-crit="long"><span class="crit-card-icon">✗</span><span>16+ chars</span></div>
+          <div class="crit-card" data-crit="noRepeat"><span class="crit-card-icon">✗</span><span>No repeats</span></div>
+          <div class="crit-card" data-crit="noSeq"><span class="crit-card-icon">✗</span><span>No sequences</span></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- RIGHT: HISTORY PANEL -->
+    <aside class="panel panel-history" id="historyPanel">
+      <div class="panel-header">
+        <span class="panel-label">HISTORY</span>
+        <button class="icon-btn" id="clearHistoryBtn" title="Clear all">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        </button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">No history yet.<br/>Generate something!</div>
+      </div>
+    </aside>
+
+  </div><!-- /layout -->
+
+</div><!-- /app -->
+
+<div class="toast" id="toast">Copied!</div>
+
+<script src="app.js"></script>
+</body>
+</html>
